@@ -1,0 +1,56 @@
+canvas {
+    width: 100vw;
+    height: 100vh;
+}
+body {
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+}
+
+#debug {
+    position: fixed;
+    top: 0;
+    left: calc(100% - 330px);
+    z-index: 99;
+    overflow-y: scroll;
+
+    color: black;
+    width: 100%;
+    height: 100%;
+}
+
+#debug > table {
+    margin: 10px;
+    background: rgba(255,255,255,.8);
+    border-collapse: collapse;
+    border: 1px solid black;
+}
+
+#debug > table > tr > td {
+    width: 150px;
+    border: 1px solid grey;
+    padding: 2px;
+}
+#dbtext {
+    position: fixed;
+    font-size: 20px;
+    top: 0;
+    left: 100px;
+    margin: 30px;
+    color: black;
+    background: white;
+    z-index: 99;
+}
+#fps {
+    font-size: 32px;
+    color: red;
+    font-weight: 900;
+    position: fixed;
+    margin: 20px;
+    padding: 10px;
+    border: 1px solid black;
+    background: rgba(0,0,0,.5);
+    width: 50px;
+    text-align: center;
+}
