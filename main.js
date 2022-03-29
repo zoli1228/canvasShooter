@@ -1,6 +1,7 @@
 const canvas = document.querySelector("#gameScreen")
 const ctx = canvas.getContext("2d")
 let dbtext = document.querySelector("#dbtext")
+let maxFps = 60
 
 import Entity from "./scripts/entity.js"
 import randomPosition from "./scripts/randomPosition.js"
@@ -36,25 +37,31 @@ let initiateScreen = () => {
 }
 
 
-let then = performance.now()
-let times = [], fps, elapsedSeconds
-let loop = () => {
 
-    const now = performance.now();
-    elapsedSeconds = Math.round((now - then) / 1000)
+
+let deltaSeconds = 0
+let then = Date.now()
+let times = [], fps, elapsedSeconds = 0
+let loop = (now) => {
+    /* const now = Date.now() */
+    let elapsed = (now - then) / 1000
     while (times.length > 0 && times[0] <= now - 1000) {
         times.shift();
     }
     times.push(now);
     fps = times.length;
-
+    
+    then = now
+    deltaSeconds = maxFps * elapsed
+    /* console.log(deltaSeconds) */
     fpsCounter(fps)
     initiateScreen()
     update()
-    window.requestAnimationFrame(loop)
+    
+    requestAnimationFrame(loop)
 }
 
-
+let maxMobs = 20
 
 
 window.addEventListener("resize", () => {
@@ -62,7 +69,7 @@ window.addEventListener("resize", () => {
     height = window.innerHeight
 })
 
-initiateScreen()
+
 window.requestAnimationFrame(loop)
 // Game update function
 let player = new Player()
@@ -71,12 +78,10 @@ entityArray.push(player)
 player.debug()
 player.addControls()
 player.position = { x: 50, y: 500 }
-player.accelSpeed = 0.05
 
-let maxMobs = 40
 let reticle = new Reticle()
-
 let update = () => {
+
     if (entityArray.length < maxMobs) {
         for (let i = 0; i < maxMobs; i++) {
             let mob = new Entity(randomPosition(width, height))
@@ -88,7 +93,7 @@ let update = () => {
     }
     entityArray.forEach(mob => {
         mob.draw(ctx)
-        mob.update()
+        mob.update(deltaSeconds)
         mob.updateDebug()
         if (mob.mob != "player") {
             mob.behaviour.look(player)

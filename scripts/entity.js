@@ -32,6 +32,13 @@ export default class Entity {
         this.debugField;
         this.keysActive = []
         this.up = 0, this.down = 0, this.left = 0, this.right = 0;
+
+        this.upAccel = 0
+        this.downAccel = 0
+        this.leftAccel = 0
+        this.rightAccel = 0
+        this.accelSpeed = 0.1
+        
     }
     debug() {
 
@@ -148,12 +155,9 @@ export default class Entity {
         })
 
     }
-    upAccel = 0
-    downAccel = 0
-    leftAccel = 0
-    rightAccel = 0
-    accelSpeed = 0.15
-    update() {
+
+    update(deltaTime) {
+        
         if (this.hasControl == true) {
             this.heading = 180 + lookAtMouse(this.position.x + this.size.x / 2, this.position.y + this.size.y / 2)
         }
@@ -164,16 +168,16 @@ export default class Entity {
             key == "KeyD" ? this.right = 1 : null;
         })
 
-        this.upAccel <= 1 && this.up == 1 ? this.upAccel += this.accelSpeed : null;
-        this.downAccel <= 1 && this.down == 1 ? this.downAccel += this.accelSpeed : null;
-        this.leftAccel <= 1 && this.left == 1 ? this.leftAccel += this.accelSpeed : null;
-        this.rightAccel <= 1 && this.right == 1 ? this.rightAccel += this.accelSpeed : null;
+        this.upAccel <= 1 && this.up == 1 ? this.upAccel += this.accelSpeed * deltaTime: null;
+        this.downAccel <= 1 && this.down == 1 ? this.downAccel += this.accelSpeed * deltaTime: null;
+        this.leftAccel <= 1 && this.left == 1 ? this.leftAccel += this.accelSpeed * deltaTime : null;
+        this.rightAccel <= 1 && this.right == 1 ? this.rightAccel += this.accelSpeed * deltaTime : null;
 
 
-        this.upAccel > 0 && this.up == 0 ? this.upAccel -= this.accelSpeed : null
-        this.downAccel > 0 && this.down == 0 ? this.downAccel -= this.accelSpeed : null
-        this.leftAccel > 0 && this.left == 0 ? this.leftAccel -= this.accelSpeed : null
-        this.rightAccel > 0 && this.right == 0 ? this.rightAccel -= this.accelSpeed : null
+        this.upAccel > 0 && this.up == 0 ? this.upAccel -= this.accelSpeed * deltaTime : null
+        this.downAccel > 0 && this.down == 0 ? this.downAccel -= this.accelSpeed * deltaTime : null
+        this.leftAccel > 0 && this.left == 0 ? this.leftAccel -= this.accelSpeed * deltaTime : null
+        this.rightAccel > 0 && this.right == 0 ? this.rightAccel -= this.accelSpeed * deltaTime : null
 
         this.upAccel < 0 ? this.upAccel = 0 : null
         this.downAccel < 0 ? this.downAccel = 0 : null
@@ -186,10 +190,10 @@ export default class Entity {
         this.rightAccel > 1 ? this.rightAccel = 1 : null
 
 
-        this.position.x += this.speed * (this.rightAccel)
-        this.position.x -= this.speed * (this.leftAccel)
-        this.position.y -= this.speed * (this.upAccel)
-        this.position.y += this.speed * (this.downAccel)
+        this.position.x += this.speed * deltaTime * this.rightAccel
+        this.position.x -= this.speed * deltaTime * (this.leftAccel)
+        this.position.y -= this.speed * deltaTime * (this.upAccel)
+        this.position.y += this.speed * deltaTime * (this.downAccel)
 
         this.up = 0;
         this.down = 0;
