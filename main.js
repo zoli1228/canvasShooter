@@ -15,11 +15,11 @@ let height = window.innerHeight;
 
 let mouseX = 0, mouseY = 0
 document.addEventListener("mousemove", (e) => {
-    
+
     mouseX = e.clientX
     mouseY = e.clientY
-    if(mouseX && mouseY) {
-        document.body.style.cursor = "none"
+    if (mouseX && mouseY) {
+        document.body.style.cursor = "crosshair"
     }
 
 })
@@ -31,7 +31,7 @@ let initiateScreen = () => {
     ctx.clearRect(0, 0, width, height);
     ctx.strokeStyle = "black"
     ctx.strokeRect(30, 30, width - 60, height - 60)
-    
+
 
 }
 
@@ -41,7 +41,7 @@ let times = [], fps, elapsedSeconds
 let loop = () => {
 
     const now = performance.now();
-    elapsedSeconds = Math.round((now-then) / 1000)
+    elapsedSeconds = Math.round((now - then) / 1000)
     while (times.length > 0 && times[0] <= now - 1000) {
         times.shift();
     }
@@ -70,43 +70,39 @@ entityArray.push(player)
 
 player.debug()
 player.addControls()
-player.position = { x: 50, y: 500}
+player.position = { x: 50, y: 500 }
 player.accelSpeed = 0.05
 
-let maxMobs = 10
+let maxMobs = 40
 let reticle = new Reticle()
-let reticle2 = new Reticle()
+
 let update = () => {
-    reticle2.color = "rgb(100,0,100)"
-    reticle2.radius = 10
     if (entityArray.length < maxMobs) {
         for (let i = 0; i < maxMobs; i++) {
             let mob = new Entity(randomPosition(width, height))
-            /* mob.debug() */
+            mob.debug()
             mob.set.speed(1 + Math.random() * 3)
             entityArray.push(mob)
-            
+
         }
     }
     entityArray.forEach(mob => {
         mob.draw(ctx)
         mob.update()
-        if(mob.mob != "player") {
+        mob.updateDebug()
+        if (mob.mob != "player") {
             mob.behaviour.look(player)
         }
-        if(Math.abs((reticle.position.x + reticle.radius / 2) - (mob.position.x + mob.size.x / 2)) < mob.size.x && Math.abs((reticle.position.y + reticle.radius / 2) - (mob.position.y + mob.size.x / 2)) < mob.size.y) {
-            reticle2.color = "green"
-            reticle2.radius = 15
+        if (Math.abs((reticle.position.x + reticle.radius / 2) - (mob.position.x + mob.size.x / 2)) < mob.size.x && Math.abs((reticle.position.y + reticle.radius / 2) - (mob.position.y + mob.size.x / 2)) < mob.size.y) {
+            reticle.aimingAt(mob.isHostile)
             mob.drawID(ctx)
-        } 
-        
+        }
+
     })
-    
+
     player.updateDebug()
     dbtext.innerHTML = `Up: ${player.upAccel.toFixed(2)}, Down: ${player.downAccel.toFixed(2)}, Left: ${player.leftAccel.toFixed(2)}, Right: ${player.rightAccel.toFixed(2)}`
-    reticle.draw(ctx, mouseX, mouseY)
-    
-    reticle2.draw(ctx, mouseX, mouseY)
+    reticle.draw(mouseX, mouseY)
 
 
 

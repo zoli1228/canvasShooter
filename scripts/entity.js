@@ -14,7 +14,7 @@ export default class Entity {
         this.health = 100
         this.isHostile = true
         this.equipped = "none"
-        this.color = "red"
+        this.color = "rgb(100,0,0)"
         this.position = position
         this.heading = 0;
         this.player = false;
@@ -51,6 +51,7 @@ export default class Entity {
             }
 
         }
+        
         dbTable.append(table)
         this.debugField = table
     }
